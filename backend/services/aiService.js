@@ -6,13 +6,13 @@ const openai = new OpenAI({
 });
 
 // Function to generate suggestions for improving SOP content
-export async function generateSuggestions(sopContent) {
+export async function generateSuggestions(sopContent,title) {
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [
                 { "role": 'system', "content": 'You are an AI assistant that provides clear and direct answers based on the input provided. Format the output in Markdown (mandatory).' },
-                { "role": 'user', "content": `Given the following SOP content, generate the most appropriate Standard Operating Procedure that could form out of the given input. Don't mention the title:\n${sopContent}` },
+                { "role": 'user', "content": `Given the following SOP content, generate the most appropriate Standard Operating Procedure that could form out of the given input. Don't mention the title: \n Title: ${title} \n${sopContent}` },
             ],
             max_tokens: 700,
         });

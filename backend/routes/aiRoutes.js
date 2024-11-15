@@ -1,15 +1,15 @@
 import express from 'express';
 import { generateSuggestions, assessQualityWithOpenAI } from '../services/aiService.js';
-import { getSOPContentById, updateQualityScore } from '../controllers/sopController.js';
+import { getSOPContentById, updateQualityScore, getSOPContentForSuggestionById } from '../controllers/sopController.js';
 import { generateChecklistItems, generateResourceLinks } from '../services/aiService.js';
 
 const router = express.Router();
 
 
 router.post('/suggestions', async(req, res) => {
-    const { content } = req.body;
+    const {title, content } = req.body;
     try {
-        const suggestions = await generateSuggestions(content);
+        const suggestions = await generateSuggestions(content,title);
         res.json(suggestions); // Ensure that 'suggestions' is sent as a JSON object
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -20,10 +20,10 @@ router.get('/suggestions/:id', async(req, res) => {
     const { id } = req.params;
     try {
         // Fetch the SOP content by ID
-        const content = await getSOPContentById(id);
+        const {title,content} = await getSOPContentForSuggestionById(id);
 
         // Generate suggestions based on the fetched content
-        const suggestions = await generateSuggestions(content);
+        const suggestions = await generateSuggestions(content,title);
         res.json(suggestions); // Ensure that 'suggestions' is sent as a JSON object
     } catch (error) {
         res.status(500).json({ error: error.message });

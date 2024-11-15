@@ -133,7 +133,6 @@ export const getAllChangeLogs = async(req, res) => {
 
 
 // Update an existing SOP
-// Update an existing SOP
 export const updateSOP = async (req, res) => {
     const { id } = req.params;
     const { title, content, elapsedTime, timerStatus } = req.body;
@@ -148,7 +147,7 @@ export const updateSOP = async (req, res) => {
 
         // Log the change in changeLogs
         updatedSOP.changeLogs.push({
-            change: `Updated SOP. Old Content: ${updatedSOP.content}, New Content: ${content}`,
+            change: `##Updated SOP. Old Content: ${updatedSOP.content}, \n\n\n ##New Content: ${content}`,
         });
 
         // Update the SOP with new data
@@ -227,6 +226,19 @@ export const getSOPContentById = async(id) => {
     }
 
     return sop.content;
+};
+
+export const getSOPContentForSuggestionById = async(id) => {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new Error('Invalid SOP ID');
+    }
+
+    const sop = await SOP.findById(id);
+    if (!sop) {
+        throw new Error('SOP not found');
+    }
+
+    return {title: sop.title ,content: sop.content};
 };
 
 // Update the quality score of an SOP
