@@ -5,8 +5,8 @@ Welcome to the SOP Management System project! This project is designed to help o
 https://sop-management-system.onrender.com/
 
 ## Contact Developers: [New Horizon College of Engineering, AIML Dept.]
-- Yash Tawde yashtawde9@gmail.com
 - Rahul Jauhari rj.rahul.jauhari@gmail.com
+- Yash Tawde yashtawde9@gmail.com
 
 ## Table of Contents
 
