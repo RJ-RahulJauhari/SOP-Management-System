@@ -12,7 +12,7 @@ export async function generateSuggestions(sopContent,title) {
             model: "gpt-3.5-turbo",
             messages: [
                 { "role": 'system', "content": 'You are an AI assistant that provides clear and direct answers based on the input provided. Format the output in Markdown (mandatory).' },
-                { "role": 'user', "content": `Given the following SOP content, generate the most appropriate Standard Operating Procedure that could form out of the given input. Don't mention the title: \n Title: ${title} \n${sopContent}` },
+                { "role": 'user', "content": `Given the following SOP content, generate the most appropriate Standard Operating Procedure that could form out of the given input, make it more detailed/descriptive. Don't mention the title: \n Title: ${title} \n${sopContent}` },
             ],
             max_tokens: 700,
         });
