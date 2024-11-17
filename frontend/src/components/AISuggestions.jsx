@@ -12,7 +12,8 @@ const AISuggestions = () => {
   const handleGenerateSuggestions = async () => {
     try {
       const response = await getAISuggestions(id);
-      setSuggestions(response.data.suggestions);
+      console.log('Suggestions Response:', response.data); // Debugging
+      setSuggestions(response.data.suggestions || 'No suggestions available.');
       setError(null);
     } catch (error) {
       console.error(error);
@@ -24,8 +25,9 @@ const AISuggestions = () => {
     try {
       await updateSOPContent(id, { content: suggestions });
       alert('SOP content updated successfully!');
-      
+
       const resourceResponse = await getResourceLinks(id);
+      console.log('Resources Response:', resourceResponse.data); // Debugging
       let resourceData = resourceResponse.data.resources;
 
       // Clean and format the resource data
@@ -35,9 +37,9 @@ const AISuggestions = () => {
         resourceData = JSON.stringify(resourceData, null, 2);
       }
 
-      setResources(resourceData);
+      setResources(resourceData || 'No resources available.');
     } catch (error) {
-      console.error('Failed to apply changes: ', error);
+      console.error('Failed to apply changes:', error);
       setError('Failed to apply changes to SOP content.');
     }
   };
@@ -55,7 +57,7 @@ const AISuggestions = () => {
 
   return (
     <div>
-      <div className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-lg">
+      <div className="max-w-6xl mx-auto p-4 bg-white shadow-md rounded-lg pb-6">
         <h2 className="text-2xl font-bold mb-4">AI Assisted Gap Analysis</h2>
         <form className="space-y-4">
           <div>
@@ -83,37 +85,44 @@ const AISuggestions = () => {
             Generate Suggestions
           </button>
         </form>
-        {suggestions && (
-          <div className="mt-4 bg-gray-100 p-4 rounded-md">
-            <h3 className="text-lg font-semibold mb-2">Generated Suggestions:</h3>
-            <div className="overflow-auto max-h-60">
-              <ReactMarkdown>{suggestions}</ReactMarkdown>
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              onClick={handleApplyChanges}
-            >
-              Apply Changes
-            </button>
+
+        {(suggestions || resources) && (
+          <div className="flex flex-2 flex-col lg:flex-row gap-6 mt-6">
+            {/* Suggestions Section */}
+            {suggestions && (
+              <div className="flex-1 bg-gray-100 p-4 rounded-md">
+                <h3 className="text-lg font-semibold mb-2">Generated Suggestions:</h3>
+                <div>
+                  <ReactMarkdown>{suggestions}</ReactMarkdown>
+                </div>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  onClick={handleApplyChanges}
+                >
+                  Apply Changes
+                </button>
+              </div>
+            )}
+
+            {/* Resources Section */}
+            {resources && (
+              <div className="flex-1 bg-white p-4 shadow-md rounded-md">
+                <h3 className="text-lg font-semibold mb-2">Resources:</h3>
+                <div>
+                  <ReactMarkdown>{resources}</ReactMarkdown>
+                </div>
+                <button
+                  className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  onClick={handleDownloadResources}
+                >
+                  Download Resources
+                </button>
+              </div>
+            )}
           </div>
         )}
-        {resources && (
-          <div className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-lg mt-6">
-            <h3 className="text-lg font-semibold mb-2">Resources:</h3>
-            <div className="overflow-auto max-h-60">
-              <ReactMarkdown>{resources}</ReactMarkdown>
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-              onClick={handleDownloadResources}
-            >
-              Download Resources
-            </button>
-          </div>
-        )}
-        {error && (
-          <p className="mt-4 text-lg text-red-600">{error}</p>
-        )}
+
+        {error && <p className="mt-4 text-lg text-red-600">{error}</p>}
       </div>
       <ViewSOP />
     </div>

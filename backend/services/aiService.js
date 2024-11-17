@@ -87,7 +87,7 @@ export async function generateResourceLinks(sopContent) {
 
         // Format resources into Markdown
         const formattedResources = resources.map(resource =>
-            `- [${resource.title}](${resource.link}): ${resource.snippet}`
+            `[${resource.title}](${resource.link}): ${resource.snippet}\n\n\n`
         );
 
         return { resources: formattedResources };
