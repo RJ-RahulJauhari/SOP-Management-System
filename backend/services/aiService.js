@@ -32,7 +32,7 @@ export async function generateResourceLinks(sopContent) {
             model: "gpt-3.5-turbo",
             messages: [
                 { "role": 'system', "content": 'You are an AI assistant that provides helpful and relevant online resources or links related to the given SOP content. Format the output in Markdown (mandatory).' },
-                { "role": 'user', "content": `Based on the following SOP content, provide a list of relevant online resources or links where additional data and best practices related to the SOP can be found:\n${sopContent}` },
+                { "role": 'user', "content": `Based on the following SOP content, provide a list of relevant resources or online links where additional data and best practices related to the SOP can be found:\n${sopContent}` },
             ],
             max_tokens: 500,
         });
@@ -72,7 +72,7 @@ export const assessQualityWithOpenAI = async(content) => {
           Like this:
           Total Score: {score_value}
 
-          In code it is extracted like this:
+        In code it is extracted like this ( this is for your reference don't show this in the output prompt):
 
         // Extracting the total score from the response using regex
         const scoreMatch = analysis.match(/Total Score:\s*(\d+)/i);
