@@ -8,8 +8,10 @@ const AISuggestions = () => {
   const [suggestions, setSuggestions] = useState('');
   const [resources, setResources] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // Loader state
 
   const handleGenerateSuggestions = async () => {
+    setLoading(true); // Start loader
     try {
       const response = await getAISuggestions(id);
       console.log('Suggestions Response:', response.data); // Debugging
@@ -18,10 +20,13 @@ const AISuggestions = () => {
     } catch (error) {
       console.error(error);
       setError('Failed to generate AI suggestions');
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
   const handleApplyChanges = async () => {
+    setLoading(true); // Start loader
     try {
       await updateSOPContent(id, { content: suggestions });
       alert('SOP content updated successfully!');
@@ -41,6 +46,8 @@ const AISuggestions = () => {
     } catch (error) {
       console.error('Failed to apply changes:', error);
       setError('Failed to apply changes to SOP content.');
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
@@ -86,7 +93,15 @@ const AISuggestions = () => {
           </button>
         </form>
 
-        {(suggestions || resources) && (
+        {/* Loader */}
+        {loading && (
+          <div className="mt-6 flex justify-center">
+            <div className="loader border-t-4 border-blue-700 rounded-full w-8 h-8 animate-spin"></div>
+          </div>
+        )}
+
+        {/* Suggestions and Resources */}
+        {!loading && (suggestions || resources) && (
           <div className="flex flex-2 flex-col lg:flex-row gap-6 mt-6">
             {/* Suggestions Section */}
             {suggestions && (

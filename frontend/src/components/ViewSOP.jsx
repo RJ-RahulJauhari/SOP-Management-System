@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm'; // For GitHub Flavored Markdown support
+import remarkGfm from "remark-gfm"; // For GitHub Flavored Markdown support
 import { BASE_URL, LOCAL_BASE_URL } from "../../constants.js";
 
 const API_BASE_URL = BASE_URL; // Update with your API base URL
@@ -19,7 +19,7 @@ const ViewSOP = () => {
     fetchSOPs();
 
     // Load the checkbox state from localStorage
-    const savedAutoCheckState = localStorage.getItem('isAutoCheckEnabled');
+    const savedAutoCheckState = localStorage.getItem("isAutoCheckEnabled");
     if (savedAutoCheckState !== null) {
       setIsAutoCheckEnabled(JSON.parse(savedAutoCheckState));
     }
@@ -31,16 +31,11 @@ const ViewSOP = () => {
       setSOPs(response.data);
     } catch (error) {
       console.error("Error fetching SOPs:", error);
-      // Handle error state or display an error message
     }
   };
 
   const toggleExpand = (id) => {
-    if (expandedSopId === id) {
-      setExpandedSopId("");
-    } else {
-      setExpandedSopId(id);
-    }
+    setExpandedSopId(expandedSopId === id ? "" : id);
   };
 
   const handleUpdateSOP = (sop) => {
@@ -59,17 +54,13 @@ const ViewSOP = () => {
     };
 
     try {
-      await axios.put(
-        `${API_BASE_URL}/sops/update/${updateSOP._id}`,
-        updatedSOP
-      );
+      await axios.put(`${API_BASE_URL}/sops/update/${updateSOP._id}`, updatedSOP);
       fetchSOPs(); // Refresh SOPs after update
       setUpdateSOP(null); // Clear update state
       setUpdatedTitle(""); // Clear updated title
       setUpdatedContent(""); // Clear updated content
     } catch (error) {
       console.error("Error updating SOP:", error);
-      // Handle error state or display an error message
     }
   };
 
@@ -80,7 +71,6 @@ const ViewSOP = () => {
         fetchSOPs(); // Refresh SOPs after deletion
       } catch (error) {
         console.error("Error deleting SOP:", error);
-        // Handle error state or display an error message
       }
     }
   };
@@ -102,23 +92,23 @@ const ViewSOP = () => {
 
   const getProgressColor = (score) => {
     if (score < 30) {
-      return 'bg-red-500';
+      return "bg-red-500";
     } else if (score < 60) {
-      return 'bg-yellow-500';
+      return "bg-yellow-500";
     } else {
-      return 'bg-green-500';
+      return "bg-green-500";
     }
   };
 
-  const filteredSOPs = sops.filter((sop) =>
-    sop.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredSOPs = sops
+    .filter((sop) => sop.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    .slice() // Create a copy to avoid mutating the original array
+    .reverse(); // Reverse the order to display SOPs in reverse order
 
   const handleToggleChange = () => {
     const newState = !isAutoCheckEnabled;
     setIsAutoCheckEnabled(newState);
-    // Save the new state to localStorage
-    localStorage.setItem('isAutoCheckEnabled', JSON.stringify(newState));
+    localStorage.setItem("isAutoCheckEnabled", JSON.stringify(newState));
   };
 
   const hideUpdateFields = () => {
@@ -132,12 +122,15 @@ const ViewSOP = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">All SOPs</h1>
         <div className="flex items-center">
-          <label htmlFor="autoCheck" className="mr-2 text-sm font-medium text-gray-900 dark:text-white">
+          <label
+            htmlFor="autoCheck"
+            className="mr-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
             Auto Assess/Update
           </label>
-          <input 
-            id="autoCheck" 
-            type="checkbox" 
+          <input
+            id="autoCheck"
+            type="checkbox"
             className="toggle-checkbox"
             checked={isAutoCheckEnabled}
             onChange={handleToggleChange}
@@ -162,7 +155,9 @@ const ViewSOP = () => {
             {/* Progress bar at the top */}
             <div className="absolute top-0 left-0 w-full bg-gray-200 dark:bg-gray-800 rounded-t-lg">
               <div
-                className={`h-1.5 rounded-t-lg ${getProgressColor(sop.qualityScore)}`}
+                className={`h-1.5 rounded-t-lg ${getProgressColor(
+                  sop.qualityScore
+                )}`}
                 style={{ width: `${sop.qualityScore}%` }}
               ></div>
             </div>
@@ -208,7 +203,6 @@ const ViewSOP = () => {
                     value={updatedContent}
                     onChange={(e) => setUpdatedContent(e.target.value)}
                   />
-                  {/* Cross Icon to close the update fields */}
                   <button
                     onClick={hideUpdateFields}
                     className="absolute top-0 right-0 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
